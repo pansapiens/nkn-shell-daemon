@@ -1,5 +1,29 @@
 # NKN Shell Daemon
 
+## Quickstart
+
+Install [D-Chat](https://gitlab.com/losnappas/d-chat) in your browser, open a D-Chat tab.
+Note the 'nickname'.
+
+```bash
+npm install
+
+mkdir ~/.nshd
+
+# Format is: pubkey local_uid local_gid
+# Use the 'nickname' shown in D-Chat as the pubkey
+echo "3980209ad98a70f907e907af877476af98a6969f8a698698fa6986 1000 1000" >~/.nshd/authorized_pubkeys
+
+node nshd.js
+
+# Note the server listening address
+```
+
+Use the server listening address as the chatroom and private message identity in D-Chat.
+Type a command like `ls` - you should see the output of the shell command as a response.
+
+## About
+
 NKN shell daemon (nshd) is a Node.js application that uses
 [nkn-multiclient-js](https://github.com/nknorg/nkn-multiclient-js) to listen for
 incoming shell command from authenticated users, executes, and send back results
