@@ -1,5 +1,6 @@
 const fs = require('fs');
 const os = require('os');
+const homedir = require('os').homedir();
 const argv = require('yargs').argv;
 const { exec, execSync } = require('child_process');
 
@@ -9,7 +10,11 @@ const randomBytes = require('nkn-wallet/lib/crypto/tools').randomBytes;
 
 const pingInterval = 20000;
 
-const baseDir = '/etc/nshd/';
+function getUserHome() {
+  return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+}
+
+const baseDir = getUserHome() + '/.nshd/';
 const walletFile = baseDir + 'wallet.json';
 const passwordFile = baseDir + 'wallet.pswd';
 const authorizedPkFile = baseDir + 'authorized_pubkeys';
@@ -58,6 +63,7 @@ var authorizedPk = [];
 var authorizedPkRaw = [];
 try {
   authorizedPkRaw = fs.readFileSync(authorizedPkFile).toString().split('\n');
+  console.log(`Read authorized key file: ${authorizedPkFile}`);
 } catch (e) {
   fs.writeFileSync(authorizedPkFile, "");
   console.log("Create authorized pubkeys file", authorizedPkFile);
@@ -71,8 +77,10 @@ for (var i in authorizedPkRaw) {
   let au = {};
   if (s[0].includes('.')) {
     au.addr = s[0];
+    console.log(`Added authorized address: ${au.addr}`);
   } else {
     au.pk = s[0];
+    console.log(`Added authorized private key: ${au.pk}`);
   }
 
   if (s.length > 1) {
